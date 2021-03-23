@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::HashMap;
 
 pub trait Print {
@@ -23,6 +24,24 @@ pub fn print_indent(f: &mut String, level: usize, indent_size: usize) {
     }
 }
 
+fn sort_by_key<'r, 's, V>(a: &'r (&String, V), b: &'s (&String, V)) -> Ordering {
+    a.0.partial_cmp(&b.0).unwrap()
+}
+
+pub fn print_attributes(f: &mut String, attrs: Option<&HashMap<String, String>>) {
+    if let Some(attrs) = attrs {
+        let mut entries: Vec<(&String, &String)> = attrs.iter().collect();
+        entries.sort_by(sort_by_key);
+        for (key, value) in attrs.iter() {
+            f.push_str(" ");
+            f.push_str(key);
+            f.push_str("=\"");
+            f.push_str(value);
+            f.push_str("\"");
+        }
+    }
+}
+
 pub fn print_open(
     f: &mut String,
     tag: &str,
@@ -37,15 +56,7 @@ pub fn print_open(
     }
     f.push_str("<");
     f.push_str(tag);
-    if let Some(attrs) = attrs {
-        for (key, value) in attrs.iter() {
-            f.push_str(" ");
-            f.push_str(key);
-            f.push_str("=\"");
-            f.push_str(value);
-            f.push_str("\"");
-        }
-    }
+    print_attributes(f, attrs);
     if closed {
         f.push_str(" />");
     } else {

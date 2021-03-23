@@ -1,5 +1,4 @@
 use crate::comment::Comment;
-use crate::from_child;
 use crate::mj_attributes::MJAttributes;
 use crate::mj_attributes::NAME as MJ_ATTRIBUTES;
 use crate::mj_breakpoint::MJBreakpoint;
@@ -12,6 +11,7 @@ use crate::mj_title::MJTitle;
 use crate::mj_title::NAME as MJ_TITLE;
 use crate::prelude::parse::Error as ParserError;
 use crate::prelude::print::Print;
+use crate::{as_child, from_child};
 use xmlparser::{StrSpan, Tokenizer};
 
 #[derive(Debug)]
@@ -28,7 +28,9 @@ from_child!(MJHeadChild, Comment);
 from_child!(MJHeadChild, MJAttributes);
 from_child!(MJHeadChild, MJBreakpoint);
 from_child!(MJHeadChild, MJFont);
+as_child!(MJHeadChild, MJPreview, as_mj_preview);
 from_child!(MJHeadChild, MJPreview);
+as_child!(MJHeadChild, MJTitle, as_mj_title);
 from_child!(MJHeadChild, MJTitle);
 
 impl MJHeadChild {

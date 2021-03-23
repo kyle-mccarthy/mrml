@@ -10,6 +10,20 @@ macro_rules! from_child {
 }
 
 #[macro_export]
+macro_rules! as_child {
+    ($enum_name:ident, $child_name:ident, $func_name:ident) => {
+        impl $enum_name {
+            pub fn $func_name(&self) -> Option<&$child_name> {
+                match self {
+                    Self::$child_name(elt) => Some(elt),
+                    _ => None,
+                }
+            }
+        }
+    };
+}
+
+#[macro_export]
 macro_rules! parse_attribute {
     () => {
         fn parse_attribute<'a>(
